@@ -44,16 +44,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
     public function favorites()
     {
         return $this->hasMany(Favorite::class)->orderBy("created_at", 'DESC');
     }
+
     public function comments()
     {
         return $this->hasMany(Comment::class)->orderBy("created_at", 'DESC');
     }
+
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class)->orderBy("created_at", 'DESC');
     }
 }

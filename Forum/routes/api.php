@@ -31,6 +31,7 @@ Route::middleware("auth:sanctum")->group(function (){
     Route::delete('/logout',[AuthController::class,'logout'])->name('logout');
     Route::get('/users', [\App\Http\Controllers\Api\UserController::class,'index'])->name('user.index');
     Route::get('/users/{id}', [\App\Http\Controllers\Api\UserController::class,'show'])->name('user.show');
+    Route::get('/comments', [\App\Http\Controllers\Api\CommentController::class,'index'])->name('comment.index');
 
 
 });

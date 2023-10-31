@@ -32,7 +32,10 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return $message = 'logout';
+
+        return response()->json([
+            'message' => "Вы вышли из аккаунта"
+        ]);
     }
 
     public function register(Request $request){

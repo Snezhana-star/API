@@ -22,7 +22,8 @@ class PostFactory extends Factory
             'description' => fake()->text(),
             'preview' => fake()->text(100),
             'thumbnail'=> fake()->image("public/storage/posts", 640, 520, null, false),
-            'category_id'=>Category::get()->random()->id
+            'category_id'=>Category::get()->random()->id,
+            'user_id'=>'1'
         ];
     }
 }
