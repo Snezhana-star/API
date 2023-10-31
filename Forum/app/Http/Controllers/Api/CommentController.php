@@ -3,16 +3,24 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PostResource;
-use App\Models\Post;
+use App\Http\Resources\CommentResource;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-class PostController extends Controller
+class CommentController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        return PostResource::collection(Post::get());
+        if(Gate::denies('Admin')){
+            return response()->json([
+                'message' => "Доступ запрещён"
+            ], 403);
+        }
+        return CommentResource::collection(Comment::get());
     }
 
     /**
@@ -28,7 +36,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        return new PostResource(Post::findOrFail($id));
+        //
     }
 
     /**
@@ -44,15 +52,6 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        if(Gate::denies('Admin')){
-            return response()->json([
-                'message' => "Доступ запрещён"
-            ], 403);
-        }
-        $post = Post::findOrFail($id);
-        if ($post) {
-            $post->delete();
-        }
-        return redirect()->route('posts.index');
+        //
     }
 }
