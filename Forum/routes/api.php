@@ -36,4 +36,9 @@ Route::middleware("auth:sanctum")->group(function (){
     Route::delete('/comments/{id}',[CommentController::class,'destroy'])->name('comments.destroy');
     Route::delete('/users/{id}',[UserController::class,'destroy'])->name('users.destroy');
     Route::patch('/users/{id}', [UserController::class,'updateRole'])->name('users.update.role');
+    Route::get('/categories', [\App\Http\Controllers\Api\CategoryController::class,'index'])->name('categories.index');
+    Route::post('/categories', [\App\Http\Controllers\Api\CategoryController::class,'store'])->name('categories.store');
+    Route::post('/categories/{id}', [\App\Http\Controllers\Api\CategoryController::class,'update'])->name('categories.update');
+    Route::delete('/categories/{id}', [\App\Http\Controllers\Api\CategoryController::class,'destroy'])->name('categories.destroy');
+
 });

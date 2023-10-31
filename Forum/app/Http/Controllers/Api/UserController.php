@@ -53,19 +53,24 @@ class UserController extends Controller
         //
     }
 
-//    public function updateRole(Request $request, string $id)
-//    {
-//        if(Gate::denies('Admin')){
-//            return response()->json([
-//                'message' => "Доступ запрещён"
-//            ], 403);
-//        }
-//        $data = $request->validate([
-//            "role_id"=> ["required",],
-//        ]);
-//
-//
-//    }
+    public function updateRole(Request $request, string $id)
+    {
+        if(Gate::denies('Admin')){
+            return response()->json([
+                'message' => "Доступ запрещён"
+            ], 403);
+        }
+        $data = $request->validate([
+            "role_id"=> ["required",'exists:roles,id'],
+        ]);
+        $user = User::findOrFail($id)->update([
+            "role_id"=> $data["role_id"]
+        ]);
+        if($user){
+            return redirect()->route('users.show', $id);
+        }
+        return redirect()->route('users.show', $id);
+    }
 
     /**
      * Remove the specified resource from storage.
