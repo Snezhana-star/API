@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use http\Env\Response;
+
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
@@ -16,9 +16,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        if(Gate::denies('Admin')){
+        if (Gate::denies('Admin')) {
             return response()->json([
-               'message' => "Доступ запрещён"
+                'message' => "Доступ запрещён"
             ], 403);
         }
         return UserResource::collection(User::get());
@@ -37,7 +37,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        if(Gate::denies('show-user',$id)){
+        if (Gate::denies('show-user', $id)) {
             return response()->json([
                 'message' => "Доступ запрещён"
             ], 403);
@@ -53,11 +53,34 @@ class UserController extends Controller
         //
     }
 
+//    public function updateRole(Request $request, string $id)
+//    {
+//        if(Gate::denies('Admin')){
+//            return response()->json([
+//                'message' => "Доступ запрещён"
+//            ], 403);
+//        }
+//        $data = $request->validate([
+//            "role_id"=> ["required",],
+//        ]);
+//
+//
+//    }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        if(Gate::denies('Admin')){
+            return response()->json([
+                'message' => "Доступ запрещён"
+            ], 403);
+        }
+        $user = User::findOrFail($id);
+        if ($user) {
+            $user->delete();
+        }
+        return redirect()->route('users.index');
     }
 }

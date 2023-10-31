@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,9 +29,11 @@ Route::post('/register', [AuthController::class,'register'])->name('register');
 
 Route::middleware("auth:sanctum")->group(function (){
     Route::delete('/logout',[AuthController::class,'logout'])->name('logout');
-    Route::get('/users', [\App\Http\Controllers\Api\UserController::class,'index'])->name('user.index');
-    Route::get('/users/{id}', [\App\Http\Controllers\Api\UserController::class,'show'])->name('user.show');
-    Route::get('/comments', [\App\Http\Controllers\Api\CommentController::class,'index'])->name('comment.index');
-    Route::delete('/posts/{id}',[PostController::class,'destroy'])->name('post.destroy');
-
+    Route::get('/users', [UserController::class,'index'])->name('users.index');
+    Route::get('/users/{id}', [UserController::class,'show'])->name('users.show');
+    Route::get('/comments', [CommentController::class,'index'])->name('comments.index');
+    Route::delete('/posts/{id}',[PostController::class,'destroy'])->name('posts.destroy');
+    Route::delete('/comments/{id}',[CommentController::class,'destroy'])->name('comments.destroy');
+    Route::delete('/users/{id}',[UserController::class,'destroy'])->name('users.destroy');
+    Route::patch('/users/{id}', [UserController::class,'updateRole'])->name('users.update.role');
 });

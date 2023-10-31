@@ -52,6 +52,16 @@ class CommentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if(Gate::denies('Admin')){
+            return response()->json([
+                'message' => "Доступ запрещён"
+            ], 403);
+        }
+        $comment = Comment::findOrFail($id);
+        if ($comment) {
+            $comment->delete();
+        }
+        return redirect()->route('comments.index');
     }
+
 }
