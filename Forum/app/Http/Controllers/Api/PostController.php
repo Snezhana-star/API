@@ -15,36 +15,76 @@ class PostController extends Controller
         return PostResource::collection(Post::get());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        if (Gate::denies('Editor')) {
+            return response()->json([
+                'message' => "Доступ запрещён"
+            ], 403);
+        }
+        $data = $request->validate([
+            'title' => ['required', 'string'],
+            'preview' => ['required', 'string'],
+            'description' => ['required', 'string'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'thumbnail' => ['required', 'image'],
+        ]);
+
+        $post = Post::create([
+            'title' => $data["title"],
+            'preview' => $data["preview"],
+            'description' => $data["description"],
+            'category_id' => $data["category_id"],
+            'thumbnail' => $request->file('thumbnail')->store('public/posts'),
+            'user_id' => auth()->user()->id,
+        ]);
+        if ($post) {
+            return $post;
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         return new PostResource(Post::findOrFail($id));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
+        if (Gate::denies('Editor')) {
+            return response()->json([
+                'message' => "Доступ запрещён"
+            ], 403);
+        }
+        $data = $request->validate([
+            'title' => ['string'],
+            'preview' => ['string'],
+            'description' => ['string'],
+            'category_id' => ['exists:categories,id'],
+            'thumbnail' => ['image'],
+        ]);
+
+        if ($request->hasFile('thumbnail')) {
+            Post::findOrFail($id)->update([
+                'thumbnail' => $request->file('thumbnail')->store('public/posts'),
+            ]);
+            array_pop($data);
+            Post::findOrFail($id)->update($data);
+        } else {
+            Post::findOrFail($id)->update($request->validate([
+                'title' => ['string'],
+                'preview' => ['string'],
+                'description' => ['string'],
+                'category_id' => ['exists:categories,id'],
+                'thumbnail' => ['image'],
+            ]));
+        }
+        return redirect()->route('posts.show', $id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        if(Gate::denies('Admin')){
+        if (Gate::denies('Admin')) {
             return response()->json([
                 'message' => "Доступ запрещён"
             ], 403);

@@ -19,8 +19,9 @@ class UserResource extends JsonResource
             'name'=>$this->name,
             'role'=>$this->role->name,
             'email'=>$this->email,
-            'own_posts'=>PostResource::collection($this->posts)
-
+            'own_posts'=>PostResource::collection($this->posts),
+            'comments'=>CommentForUserResource::collection($this->comments),
+            'favorite'=>FavoriteResource::collection($this->favorites)
         ];
     }
 }

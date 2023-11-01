@@ -55,7 +55,7 @@ class AuthController extends Controller
         if($user) {
             return $user;
         }
-        return to_route('profile', ['id' => $user->id]);
+        return redirect()->route('user.show',['id'=>$user->id]);
     }
 
 }

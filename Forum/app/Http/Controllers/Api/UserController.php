@@ -11,9 +11,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         if (Gate::denies('Admin')) {
@@ -24,17 +22,7 @@ class UserController extends Controller
         return UserResource::collection(User::get());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         if (Gate::denies('show-user', $id)) {
@@ -45,39 +33,45 @@ class UserController extends Controller
         return new UserResource(User::findOrFail($id));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
-    }
-
-    public function updateRole(Request $request, string $id)
-    {
-        if(Gate::denies('Admin')){
+        if (Gate::denies('User', $id)) {
             return response()->json([
                 'message' => "Доступ запрещён"
             ], 403);
         }
         $data = $request->validate([
-            "role_id"=> ["required",'exists:roles,id'],
+            "name" => ["string"],
+            "email" => ["email", "string", "unique:users,email"],
+            "password"=> ["string"]
+        ]);
+
+        User::findOrFail($id)->update($data);
+        return redirect()->route('users.show', $id);
+    }
+
+    public function updateRole(Request $request, string $id)
+    {
+        if (Gate::denies('Admin')) {
+            return response()->json([
+                'message' => "Доступ запрещён"
+            ], 403);
+        }
+        $data = $request->validate([
+            "role_id" => ["required", 'exists:roles,id'],
         ]);
         $user = User::findOrFail($id)->update([
-            "role_id"=> $data["role_id"]
+            "role_id" => $data["role_id"]
         ]);
-        if($user){
+        if ($user) {
             return redirect()->route('users.show', $id);
         }
         return redirect()->route('users.show', $id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        if(Gate::denies('Admin')){
+        if (Gate::denies('Admin')) {
             return response()->json([
                 'message' => "Доступ запрещён"
             ], 403);
