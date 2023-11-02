@@ -32,12 +32,9 @@ class CategoryController extends Controller
         $data = $request->validate([
             "name" => ["required", "string"],
         ]);
-        $category = Category::create([
+        Category::create([
             "name" => $data["name"]
         ]);
-        if ($category) {
-            return redirect()->route('categories.index');
-        }
         return redirect()->route('categories.index');
 
     }
@@ -53,12 +50,10 @@ class CategoryController extends Controller
         $data = $request->validate([
             "name" => ["required", "string"],
         ]);
-        $category = Category::findOrFail($id)->update([
+         Category::findOrFail($id)->update([
             "name" => $data["name"]
         ]);
-        if ($category) {
-            return redirect()->route('categories.index');
-        }
+
         return redirect()->route('categories.index');
     }
 

@@ -43,7 +43,7 @@ class UserController extends Controller
         $data = $request->validate([
             "name" => ["string"],
             "email" => ["email", "string", "unique:users,email"],
-            "password"=> ["string"]
+            "password" => ["string"]
         ]);
 
         User::findOrFail($id)->update($data);
@@ -60,12 +60,10 @@ class UserController extends Controller
         $data = $request->validate([
             "role_id" => ["required", 'exists:roles,id'],
         ]);
-        $user = User::findOrFail($id)->update([
+        User::findOrFail($id)->update([
             "role_id" => $data["role_id"]
         ]);
-        if ($user) {
-            return redirect()->route('users.show', $id);
-        }
+
         return redirect()->route('users.show', $id);
     }
 

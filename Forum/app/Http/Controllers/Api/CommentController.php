@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         if (Gate::denies('Admin')) {
@@ -36,13 +33,13 @@ class CommentController extends Controller
             "post_id" => $post->id
 
         ]);
-        return redirect()->route('posts.show',['id'=>$post->id]);
+        return redirect()->route('posts.show', ['id' => $post->id]);
     }
 
     public function update(Request $request, string $id)
     {
         $user = Comment::findOrFail($id)->user;
-        if (Gate::denies('User', $user->id )) {
+        if (Gate::denies('User', $user->id)) {
             return response()->json([
                 'message' => "Доступ запрещён"
             ], 403);

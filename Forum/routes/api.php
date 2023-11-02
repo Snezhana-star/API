@@ -35,9 +35,10 @@ Route::middleware("auth:sanctum")->group(function () {
     Route::delete('/posts/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::post('/posts/{id}', [PostController::class, 'update'])->name('posts.update');
+    //favorite
     Route::post('posts/{post}/favorites', [FavoriteController::class, 'store'])->name('favorites.store');
-
-    //comments
+    Route::delete('/favorites/{id}',[FavoriteController::class, 'destroy'])->name('favorites.destroy');
+        //comments
     Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
     Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::patch('comments/{id}', [CommentController::class, 'update'])->name('comments.update');

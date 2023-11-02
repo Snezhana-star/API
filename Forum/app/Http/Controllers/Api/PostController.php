@@ -38,9 +38,7 @@ class PostController extends Controller
             'thumbnail' => $request->file('thumbnail')->store('public/posts'),
             'user_id' => auth()->user()->id,
         ]);
-        if ($post) {
-            return $post;
-        }
+        return $post;
     }
 
 
