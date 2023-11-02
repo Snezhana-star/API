@@ -27,13 +27,13 @@ Route::get('/posts', [\App\Http\Controllers\Api\PostController::class, 'index'])
 Route::get('/posts/{id}', [\App\Http\Controllers\Api\PostController::class, 'show'])->name('posts.show');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
-
+Route::post('/posts', [PostController::class, 'search']);
 Route::middleware("auth:sanctum")->group(function () {
     //auth
     Route::delete('/logout', [AuthController::class, 'logout'])->name('logout');
     //posts
     Route::delete('/posts/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
-    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::post('/posts/create', [PostController::class, 'store'])->name('posts.store');
     Route::post('/posts/{id}', [PostController::class, 'update'])->name('posts.update');
     //favorite
     Route::post('posts/{post}/favorites', [FavoriteController::class, 'store'])->name('favorites.store');

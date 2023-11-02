@@ -93,4 +93,17 @@ class PostController extends Controller
         }
         return redirect()->route('posts.index');
     }
+
+    public function search(Request $request)
+    {
+        if ($request->title) {
+            $data = PostResource::collection(Post::where('title', "like", '%' . $request->title . '%')
+                ->orWhere('preview', "like", '%' . $request->title . '%')
+                ->get());
+            return $data;
+        }
+        return response()->json([
+            'message' => "Таких статей нет"
+        ]);
+    }
 }
